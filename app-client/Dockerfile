@@ -1,9 +1,21 @@
-#client vue Dockerfile
-FROM node:14.17.5 as build-stage
-WORKDIR /app-client
-COPY package*.json ./
+# pull the base image
+FROM node:14.19
+
+# set the working direction
+WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# install app dependencies
+COPY package.json ./
+
+COPY package-lock.json ./
+
 RUN npm install
-COPY ./ .
-RUN npm run build
-EXPOSE 8080
-CMD [ "npm", "run", "serve" ]
+
+# add app
+COPY . ./
+
+# start app
+CMD ["npm", "start"]
